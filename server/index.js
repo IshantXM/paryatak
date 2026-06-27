@@ -1,5 +1,5 @@
 /**
- * Yatri Safety Backend Server
+ * Paryatak Safety Backend Server
  * 
  * Main entry point for the safety/travel API.
  * 
@@ -36,6 +36,7 @@ const tripRoutes = require('./routes/trip.routes');
 const dangerZoneRoutes = require('./routes/dangerZone.routes');
 const safetyRoutes = require('./routes/safety.routes');
 const userRoutes = require('./routes/user.routes');
+const mapsRoutes = require('./routes/maps.routes');
 
 // =============================================================================
 // APP INITIALIZATION
@@ -67,7 +68,7 @@ app.get('/health', (req, res) => {
     res.json({
         success: true,
         status: 'OK',
-        message: 'Yatri Safety API is running',
+        message: 'Paryatak Safety API is running',
         timestamp: new Date().toISOString(),
         version: '1.0.0'
     });
@@ -80,12 +81,13 @@ app.use('/api/trip', tripRoutes);
 app.use('/api/danger-zones', dangerZoneRoutes);
 app.use('/api/safety', safetyRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/maps', mapsRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
     res.json({
         success: true,
-        message: 'Yatri Safety API',
+        message: 'Paryatak Safety API',
         version: '1.0.0',
         endpoints: {
             health: '/health',
@@ -95,6 +97,7 @@ app.get('/', (req, res) => {
             dangerZones: '/api/danger-zones',
             safety: '/api/safety',
             user: '/api/user',
+            maps: '/api/maps',
         }
     });
 });
@@ -124,7 +127,7 @@ const startServer = async () => {
         app.listen(server.port, () => {
             console.log('');
             console.log('╔══════════════════════════════════════════════════════╗');
-            console.log('║            🛡️  Yatri Safety API v1.0.0               ║');
+            console.log('║            🛡️  Paryatak Safety API v1.0.0            ║');
             console.log('╠══════════════════════════════════════════════════════╣');
             console.log(`║  Server:  http://localhost:${server.port}                    ║`);
             console.log(`║  Health:  http://localhost:${server.port}/health              ║`);

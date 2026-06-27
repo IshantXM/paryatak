@@ -10,6 +10,10 @@ const router = express.Router();
 const authCtrl = require('../controllers/auth.controller');
 const { authenticate } = require('../middleware/auth.middleware');
 const { requireFields, validatePhone, validateEmail } = require('../middleware/validate.middleware');
+const { authLimiter } = require('../middleware/rateLimiter.middleware');
+
+// Apply rate limiter to all auth routes
+router.use(authLimiter);
 
 // ─── Signup (2-step OTP verified) ────────────────────────────────────────────
 

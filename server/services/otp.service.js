@@ -64,11 +64,11 @@ const sendOtpEmail = async (email, otp, purpose) => {
     const mailOptions = {
         from: smtp.from,
         to: email,
-        subject: `Yatri Safety - ${label} OTP`,
+        subject: `Paryatak Safety - ${label} OTP`,
         html: `
             <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border-radius: 16px;">
                 <div style="text-align: center; margin-bottom: 24px;">
-                    <h1 style="color: #38bdf8; margin: 0; font-size: 28px;">🛡️ Yatri Safety</h1>
+                    <h1 style="color: #38bdf8; margin: 0; font-size: 28px;">🛡️ Paryatak Safety</h1>
                     <p style="color: #94a3b8; margin-top: 4px; font-size: 14px;">${label}</p>
                 </div>
                 <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 24px; text-align: center;">
@@ -86,7 +86,7 @@ const sendOtpEmail = async (email, otp, purpose) => {
                 </p>
             </div>
         `,
-        text: `Your Yatri Safety ${label} OTP is: ${otp}. It expires in ${otpConfig.expiryMinutes} minutes. Do not share this OTP.`,
+        text: `Your Paryatak Safety ${label} OTP is: ${otp}. It expires in ${otpConfig.expiryMinutes} minutes. Do not share this OTP.`,
     };
 
     try {

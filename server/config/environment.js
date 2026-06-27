@@ -47,15 +47,15 @@ const cors = {
  * MongoDB configuration
  */
 const database = {
-    uri: process.env.MONGODB_URI || 'mongodb://localhost:27017/yatri',
+    uri: process.env.MONGODB_URI || 'mongodb://localhost:27017/paryatak',
 };
 
 /**
  * JWT configuration
  */
 const jwt = {
-    secret: process.env.JWT_SECRET || 'yatri-dev-jwt-secret-change-in-production',
-    refreshSecret: process.env.JWT_REFRESH_SECRET || 'yatri-dev-refresh-secret-change-in-production',
+    secret: process.env.JWT_SECRET || 'paryatak-dev-jwt-secret-change-in-production',
+    refreshSecret: process.env.JWT_REFRESH_SECRET || 'paryatak-dev-refresh-secret-change-in-production',
     accessExpiry: process.env.JWT_ACCESS_EXPIRY || '15m',
     refreshExpiry: process.env.JWT_REFRESH_EXPIRY || '7d',
 };
@@ -69,7 +69,7 @@ const smtp = {
     secure: process.env.SMTP_SECURE === 'true',
     user: process.env.SMTP_USER || '',
     pass: process.env.SMTP_PASS || '',
-    from: process.env.SMTP_FROM || '"Yatri Safety" <noreply@yatri.app>',
+    from: process.env.SMTP_FROM || '"Paryatak Safety" <noreply@paryatak.app>',
 };
 
 /**

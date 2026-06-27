@@ -1,0 +1,104 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Brand Colors */
+  --saffron: #FF6B00;
+  --saffron-light: #FF8C38;
+  --saffron-dark: #D45600;
+  --forest: #1A6B3C;
+  --forest-light: #2D9B5A;
+  --ocean: #0B4F9E;
+  --gold: #D4A017;
+  --cream: #FDF8F0;
+  --charcoal: #1C1C2E;
+
+  /* Semantic */
+  --background: #FFFFFF;
+  --foreground: #1C1C2E;
+  --card: #FFFFFF;
+  --card-border: #E8E4DC;
+  --muted: #F5F0E8;
+  --muted-foreground: #6B6B7B;
+  --primary: var(--saffron);
+  --primary-foreground: #FFFFFF;
+  --secondary: var(--forest);
+  --accent: var(--gold);
+  --radius: 12px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Playfair Display', serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--muted); }
+::-webkit-scrollbar-thumb { background: var(--saffron); border-radius: 3px; }
+
+/* Leaflet map fix */
+.leaflet-container { z-index: 0; }
+
+/* Hero gradient */
+.hero-gradient {
+  background: linear-gradient(135deg, #FF6B00 0%, #D45600 50%, #1A6B3C 100%);
+}
+
+/* Card hover */
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* Saffron text gradient */
+.text-gradient {
+  background: linear-gradient(135deg, #FF6B00, #D4A017);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Subtle animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.5s ease forwards; }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Star rating */
+.star-filled { color: #F59E0B; }
+.star-empty { color: #D1D5DB; }

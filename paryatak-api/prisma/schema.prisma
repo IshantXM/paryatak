@@ -1,0 +1,312 @@
+// Prisma Schema for Paryatak Tourism Platform
+// PostgreSQL database
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum Role {
+  USER
+  ADMIN
+  MODERATOR
+}
+
+enum TripStatus {
+  PLANNING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+enum ServiceType {
+  HOSPITAL
+  POLICE
+  ATM
+  PETROL
+  TOURIST_HELP
+  PHARMACY
+  FIRE_STATION
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// ─── User ─────────────────────────────────────────────────────────────────────
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  password     String
+  role         Role     @default(USER)
+  avatarUrl    String?
+  phone        String?
+  bio          String?
+  isVerified   Boolean  @default(false)
+  refreshToken String?
+
+  trips          Trip[]
+  reviews        Review[]
+  bookmarks      Bookmark[]
+  travelHistory  TravelHistory[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+// ─── Geography ────────────────────────────────────────────────────────────────
+
+model State {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  slug        String  @unique
+  description String?
+  imageUrl    String?
+  region      String? // North, South, East, West, Central, Northeast
+  capital     String?
+  language    String?
+
+  destinations Destination[]
+  festivals    Festival[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("states")
+}
+
+model Category {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  slug        String  @unique
+  description String?
+  icon        String? // icon name or emoji
+  imageUrl    String?
+  color       String? // hex color for UI
+
+  destinations Destination[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("categories")
+}
+
+// ─── Destination ──────────────────────────────────────────────────────────────
+
+model Destination {
+  id          String  @id @default(cuid())
+  name        String
+  slug        String  @unique
+  description String  @db.Text
+  shortDesc   String?
+
+  stateId    String
+  state      State    @relation(fields: [stateId], references: [id])
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  latitude  Float
+  longitude Float
+  address   String?
+  city      String?
+
+  entryFee     String? // e.g. "₹50 for Indians, ₹600 for foreigners"
+  timings      String? // e.g. "6:00 AM – 6:00 PM (Closed Fridays)"
+  bestTime     String? // e.g. "October to March"
+  duration     String? // e.g. "2-3 hours"
+
+  ratingAvg   Float @default(0)
+  ratingCount Int   @default(0)
+  isFeatured  Boolean @default(false)
+  isActive    Boolean @default(true)
+
+  nearbyAttractions String[] // array of destination slugs
+
+  images         DestinationImage[]
+  reviews        Review[]
+  bookmarks      Bookmark[]
+  travelHistory  TravelHistory[]
+  tripDests      TripDestination[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([stateId])
+  @@index([categoryId])
+  @@index([latitude, longitude])
+  @@map("destinations")
+}
+
+model DestinationImage {
+  id            String      @id @default(cuid())
+  destinationId String
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  url           String
+  publicId      String?     // Cloudinary public ID for deletion
+  caption       String?
+  isPrimary     Boolean     @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@map("destination_images")
+}
+
+// ─── Trip ─────────────────────────────────────────────────────────────────────
+
+model Trip {
+  id          String     @id @default(cuid())
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  status      TripStatus @default(PLANNING)
+
+  startDate DateTime?
+  endDate   DateTime?
+
+  budgetEstimated Float @default(0)
+  budgetSpent     Float @default(0)
+
+  destinations TripDestination[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@map("trips")
+}
+
+model TripDestination {
+  id            String      @id @default(cuid())
+  tripId        String
+  trip          Trip        @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  destinationId String
+  destination   Destination @relation(fields: [destinationId], references: [id])
+
+  dayNumber     Int     @default(1)
+  orderInDay    Int     @default(0)
+  notes         String?
+  durationHours Float?
+  estimatedCost Float?
+
+  createdAt DateTime @default(now())
+
+  @@unique([tripId, destinationId])
+  @@map("trip_destinations")
+}
+
+// ─── Review ───────────────────────────────────────────────────────────────────
+
+model Review {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  destinationId String
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+
+  rating  Int     // 1-5
+  title   String?
+  body    String  @db.Text
+  status  ReviewStatus @default(PENDING)
+
+  images ReviewImage[]
+
+  visitedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([userId, destinationId])
+  @@index([destinationId])
+  @@map("reviews")
+}
+
+model ReviewImage {
+  id       String @id @default(cuid())
+  reviewId String
+  review   Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  url      String
+  publicId String?
+
+  createdAt DateTime @default(now())
+
+  @@map("review_images")
+}
+
+// ─── Bookmark & History ───────────────────────────────────────────────────────
+
+model Bookmark {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  destinationId String
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, destinationId])
+  @@map("bookmarks")
+}
+
+model TravelHistory {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  destinationId String
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+
+  visitedAt DateTime @default(now())
+  notes     String?
+  rating    Int?
+
+  @@map("travel_history")
+}
+
+// ─── Tourism Info ─────────────────────────────────────────────────────────────
+
+model Festival {
+  id          String  @id @default(cuid())
+  stateId     String
+  state       State   @relation(fields: [stateId], references: [id])
+  name        String
+  description String? @db.Text
+  month       Int     // 1-12
+  imageUrl    String?
+  isNational  Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@map("festivals")
+}
+
+model NearbyService {
+  id        String      @id @default(cuid())
+  name      String
+  type      ServiceType
+  latitude  Float
+  longitude Float
+  address   String?
+  city      String?
+  state     String?
+  phone     String?
+  isActive  Boolean     @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([latitude, longitude])
+  @@index([type])
+  @@map("nearby_services")
+}

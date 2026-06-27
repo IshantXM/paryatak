@@ -67,7 +67,7 @@ const sendSosAlert = async (user, sosData, emergencyContacts) => {
                             </div>
                         </div>
                         <p style="color: #fca5a5; font-size: 12px; text-align: center; margin-top: 16px;">
-                            This is an automated emergency alert from Yatri Safety.
+                            This is an automated emergency alert from Paryatak Safety.
                         </p>
                     </div>
                 `,
@@ -94,7 +94,7 @@ const sendAnomalyWarning = async (userEmail, anomalyData) => {
         await getTransporter().sendMail({
             from: smtp.from,
             to: userEmail,
-            subject: `⚠️ Yatri Safety Alert — ${anomalyData.threatLevel} Threat Detected`,
+            subject: `⚠️ Paryatak Safety Alert — ${anomalyData.threatLevel} Threat Detected`,
             html: `
                 <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: linear-gradient(135deg, #78350f 0%, #92400e 100%); border-radius: 16px;">
                     <h1 style="color: #fbbf24; text-align: center; margin: 0 0 16px;">⚠️ Safety Alert</h1>
@@ -112,7 +112,7 @@ const sendAnomalyWarning = async (userEmail, anomalyData) => {
                     </div>
                 </div>
             `,
-            text: `Yatri Safety Alert: ${anomalyData.threatLevel} threat detected. Type: ${anomalyData.anomalyType}. If you need help, trigger SOS in the app.`,
+            text: `Paryatak Safety Alert: ${anomalyData.threatLevel} threat detected. Type: ${anomalyData.anomalyType}. If you need help, trigger SOS in the app.`,
         });
         return true;
     } catch (error) {
@@ -131,7 +131,7 @@ const sendTripShareNotification = async (contactEmail, userName, shareLink) => {
         await getTransporter().sendMail({
             from: smtp.from,
             to: contactEmail,
-            subject: `📍 ${userName} is sharing their trip with you — Yatri Safety`,
+            subject: `📍 ${userName} is sharing their trip with you — Paryatak Safety`,
             html: `
                 <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border-radius: 16px;">
                     <h1 style="color: #38bdf8; text-align: center; margin: 0 0 16px;">📍 Live Trip Tracking</h1>
